@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xiangqi Pro | Premium Chinese Chess</title>
+    <meta name="description" content="Experience premium Chinese Chess (Xiangqi) with advanced AI, real-time history, and synthesized sound. Detailed rules and history available at https://en.wikipedia.org/wiki/Xiangqi">
+    <link rel="icon" type="image/png" href="static/images/favicon.png">
+    <!-- Modular CSS -->
+    <link rel="stylesheet" href="static/css/base.css">
+    <link rel="stylesheet" href="static/css/dashboard.css">
+    <link rel="stylesheet" href="static/css/game.css">
+    <link rel="stylesheet" href="static/css/learn.css">
+    <link rel="stylesheet" href="static/css/overlays.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Serif+TC:wght@600;900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div id="app">
+        <!-- All overlays start hidden now -->
+        <div id="auth-overlay" class="setup-overlay">
+            <div class="setup-card glass-panel">
+                <h2 style="color: #3b82f6; margin-bottom: 2.5rem; font-family: 'Noto Serif TC', serif; font-weight: 900; font-size: 2rem;">Xiangqi Pro</h2>
+                <div id="login-form-container">
+                    <input type="text" id="login-username" placeholder="Username" class="btn glass-btn" style="width: 100%; margin-bottom: 1rem; text-align: left;">
+                    <input type="password" id="login-password" placeholder="Password" class="btn glass-btn" style="width: 100%; margin-bottom: 1rem; text-align: left;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 2rem; color: #888; font-size: 0.9rem;">
+                        <input type="checkbox" id="login-remember" style="width: auto; margin: 0;">
+                        <label for="login-remember">Remember Me</label>
+                    </div>
+                    <button id="btn-login" class="btn primary-btn" style="width: 100%;">Login</button>
+                    <div style="margin: 1.5rem 0; display: flex; align-items: center; gap: 1rem;">
+                        <hr style="flex: 1; border: 0; border-top: 1px solid rgba(255,255,255,0.1);">
+                        <span style="color: #555; font-size: 0.8rem;">OR</span>
+                        <hr style="flex: 1; border: 0; border-top: 1px solid rgba(255,255,255,0.1);">
+                    </div>
+                    <button id="btn-guest-entry" class="btn glass-btn" style="width: 100%;">Continue as Guest</button>
+                    <p style="margin-top: 1.5rem; color: #888;">New player? <a href="/register" style="color: #3b82f6;">Register here</a></p>
+                </div>
+            </div>
+        </div>
+
+        <div id="mode-selection-overlay" class="setup-overlay">
+            <div class="setup-card glass-panel" style="max-width: 500px;">
+                <h2 style="color: #3b82f6; margin-bottom: 2rem;">Choose Opponent</h2>
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <button id="btn-choose-ai" class="btn primary-btn" style="padding: 1.5rem;">Play with AI</button>
+                    <button id="btn-choose-multi" class="btn glass-btn" style="padding: 1.5rem;">Online Multiplayer</button>
+                    <button id="btn-choose-local" class="btn glass-btn" style="padding: 1.5rem;">Local Pass & Play</button>
+                </div>
+                <button class="btn-close-overlay" style="margin-top: 2rem; background: none; border: none; color: #555; cursor: pointer;">← Close</button>
+            </div>
+        </div>
+
+        <div id="ai-difficulty-overlay" class="setup-overlay">
+            <div class="setup-card glass-panel" style="max-width: 500px;">
+                <h3 style="color: #888; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 1rem;">Choose Your Side</h3>
+                <div class="side-selection" style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 2rem;">
+                    <button class="btn-side active" data-side="red" style="background: none; border: none; cursor: pointer;">
+                        <div class="piece-preview red" style="width: 70px; height: 70px; font-size: 2rem; margin: 0 auto 0.5rem;">帥</div>
+                        <span style="color: #ff4d4d; font-size: 0.8rem; font-weight: 800;">RED (FIRST)</span>
+                    </button>
+                    <button class="btn-side" data-side="black" style="background: none; border: none; cursor: pointer;">
+                        <div class="piece-preview black" style="width: 70px; height: 70px; font-size: 2rem; margin: 0 auto 0.5rem;">將</div>
+                        <span style="color: #888; font-size: 0.8rem; font-weight: 800;">BLACK (SECOND)</span>
+                    </button>
+                </div>
+
+                <h3 style="color: #888; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 1rem;">Select Difficulty</h3>
+                <div class="difficulty-options" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <button class="btn glass-btn btn-ai-level" data-level="easy" style="padding: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                        <span>Easy</span>
+                        <small style="color: #666;">Casual play</small>
+                    </button>
+                    <button class="btn glass-btn btn-ai-level" data-level="medium" style="padding: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                        <span>Medium</span>
+                        <small style="color: #666;">Standard challenge</small>
+                    </button>
+                    <button class="btn primary-btn btn-ai-level" data-level="hard" style="padding: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                        <span>Hard</span>
+                        <small style="opacity: 0.7;">Expert engine</small>
+                    </button>
+                </div>
+                <div style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 1rem; padding: 1rem; background: rgba(255,255,255,0.03); border-radius: 12px;">
+                    <label class="switch" style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; color: #888; font-size: 0.9rem;">
+                        <input type="checkbox" id="check-timed-game" checked style="width: 1.2rem; height: 1.2rem; cursor: pointer;">
+                        <span>Enable Game Timer</span>
+                    </label>
+                    
+                    <div id="ai-time-settings" style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem; border-top: 1px solid rgba(255,255,255,0.05); pt: 0.75rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="color: #888; font-size: 0.8rem;">Match Duration</span>
+                            <span id="label-match-time" style="color: #3b82f6; font-weight: 800; font-size: 0.9rem;">15 min</span>
+                        </div>
+                        <input type="range" id="input-match-time" min="5" max="60" step="5" value="15" style="width: 100%; accent-color: #3b82f6; cursor: pointer;">
+                    </div>
+                </div>
+                
+                <button id="btn-start-game" class="btn primary-btn" style="width: 100%; margin-top: 2rem; padding: 1.2rem; font-size: 1.1rem; font-weight: 800; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);">
+                    START GAME
+                </button>
+
+                <button id="btn-back-to-mode" style="margin-top: 1.5rem; background: none; border: none; color: #555; cursor: pointer; font-size: 0.9rem;">← Back</button>
+            </div>
+        </div>
+
+        <div id="lobby-overlay" class="setup-overlay">
+            <div class="setup-card glass-panel" style="max-width: 650px; padding: 3.5rem;">
+                <h2 style="color: #3b82f6; margin-bottom: 2.5rem; font-family: 'Noto Serif TC', serif; font-weight: 900; font-size: 2rem; text-align: center;">Game Lobby</h2>
+                
+                <div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 2.5rem; align-items: stretch; margin-bottom: 3rem;">
+                    <!-- Create Section -->
+                    <div style="display: flex; flex-direction: column; gap: 1.2rem;">
+                        <div style="color: #888; font-size: 0.75rem; text-transform: uppercase; font-weight: 800; letter-spacing: 1px;">Start New</div>
+                        <button id="btn-create-room" class="btn primary-btn" style="height: 100%; padding: 2.5rem 1.5rem; font-size: 1.1rem; line-height: 1.4; border-radius: 16px;">
+                            Create<br>Private Room
+                        </button>
+                    </div>
+
+                    <!-- Vertical Divider -->
+                    <div style="width: 1px; background: rgba(255,255,255,0.08); position: relative; margin: 1rem 0;">
+                        <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #1a1917; padding: 0.6rem; color: #555; font-size: 0.75rem; font-weight: 900; border-radius: 50%; border: 1px solid rgba(255,255,255,0.08); z-index: 1;">OR</span>
+                    </div>
+
+                    <!-- Join Section -->
+                    <div style="display: flex; flex-direction: column; gap: 1.2rem;">
+                        <div style="color: #888; font-size: 0.75rem; text-transform: uppercase; font-weight: 800; letter-spacing: 1px;">Join Existing</div>
+                        <div style="display: flex; flex-direction: column; gap: 0.8rem; height: 100%;">
+                            <input type="text" id="join-room-id" placeholder="Enter Room ID" class="btn glass-btn" style="width: 100%; text-align: left; padding: 1.2rem; border-color: rgba(255,255,255,0.1); border-radius: 12px; font-size: 0.95rem;">
+                            <button id="btn-join-room" class="btn glass-btn" style="width: 100%; padding: 1.2rem; font-weight: 800; background: rgba(255,255,255,0.03); border-radius: 12px; transition: all 0.2s;">JOIN MATCH</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center;">
+                    <button class="btn-close-overlay" style="background: none; border: none; color: #555; cursor: pointer; font-size: 0.9rem; transition: color 0.2s;">← Back to Mode Selection</button>
+                </div>
+            </div>
+        </div>
+
+        <header class="main-header">
+            <div class="header-content">
+                <h1 class="logo" id="logo-home" style="cursor: pointer;">Xiangqi Pro</h1>
+                <div class="header-actions" style="display: flex; align-items: center; gap: 2rem;">
+                    <nav class="nav-tabs">
+                        <button class="nav-link" data-view="game">NEW GAME</button>
+                        <button class="nav-link" data-view="learn">INFO</button>
+                    </nav>
+                    <div id="user-info" style="display: none; align-items: center; gap: 1rem;">
+                        <span id="display-username" style="color: #60a5fa; font-weight: bold;"></span>
+                        <a href="/logout" class="btn glass-btn" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">Logout</a>
+                    </div>
+                    <div id="guest-controls" style="display: flex; align-items: center; gap: 1rem;">
+                        <button class="btn primary-btn btn-show-auth" style="padding: 0.4rem 1rem; font-size: 0.8rem;">Sign In</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- Dashboard View -->
+            <div id="view-dashboard" class="content-view active">
+                <div class="dashboard-hero">
+                    <div class="hero-text">
+                        <h1>Master the Art of <span style="color: #3b82f6;">Xiangqi</span></h1>
+                        <p>Join thousands of players in the most authentic Chinese Chess experience online.</p>
+                        <div class="hero-actions">
+                            <button class="btn primary-btn btn-trigger-game" style="padding: 1.2rem 2.5rem; font-size: 1.1rem;">START PLAYING</button>
+                            <button class="btn glass-btn btn-trigger-learn" style="padding: 1.2rem 2.5rem; font-size: 1.1rem;">LEARN RULES</button>
+                        </div>
+                        <div id="dashboard-auth-prompt" style="margin-top: 3rem; padding: 2rem; background: rgba(59, 130, 246, 0.05); border-radius: 20px; border: 1px solid rgba(59, 130, 246, 0.1); max-width: 500px;">
+                            <h3 style="margin-bottom: 0.5rem; color: #fff;">Join the Community</h3>
+                            <p style="color: #888; margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.5;">Create an account to track your progress and compete in ranked multiplayer matches.</p>
+                            <button class="btn primary-btn btn-show-auth" style="padding: 0.8rem 1.5rem; font-size: 0.9rem;">Sign Up Now</button>
+                        </div>
+                    </div>
+                    <div class="hero-image"></div>
+                </div>
+            </div>
+
+            <!-- Game View -->
+            <div id="view-game" class="content-view">
+                <div class="game-container">
+                    <div class="game-board-section">
+                        <div class="board-wrapper">
+                            <div class="xiangqi-board" id="board">
+                                <div class="board-inner" id="board-inner">
+                                    <div class="grid-layer"></div>
+                                    <div class="interaction-layer"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <aside class="game-sidebar">
+                        <div class="controls-panel glass-panel">
+                            <div class="timer-container">
+                                <div id="timer-red" class="player-timer red active">
+                                    <span class="player-label">RED</span>
+                                    <span class="timer-value">10:00</span>
+                                </div>
+                                <div id="timer-black" class="player-timer black">
+                                    <span class="player-label">BLACK</span>
+                                    <span class="timer-value">10:00</span>
+                                </div>
+                            </div>
+
+
+                            <div id="ai-status-bar" style="display: none; margin-bottom: 1rem; padding: 1rem; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="color: #666; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">AI Opponent</span>
+                                    <span id="ai-level-label" class="badge" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.2); padding: 2px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 800;">EASY</span>
+                                </div>
+                                <div id="ai-thinking-indicator" style="display: none; margin-top: 0.6rem; font-size: 0.8rem; color: #3b82f6; font-weight: 600;">
+                                    <span class="dot-typing"></span> AI is thinking...
+                                </div>
+                            </div>
+
+                            <div id="game-message"></div>
+
+                            <div class="sidebar-controls">
+                                <button id="btn-reset" class="btn primary-btn">New Game</button>
+                                <button id="btn-hint" class="btn glass-btn">Get Hint</button>
+                                <button id="btn-resign" class="btn btn-danger">Resign</button>
+                                <button id="btn-coords" class="btn glass-btn">Coords: ON</button>
+                            </div>
+
+                            <div class="move-history">
+                                <div class="move-history-header">
+                                    <h3>Move History</h3>
+                                </div>
+                                <div class="history-table-container">
+                                    <table class="history-table">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Red</th>
+                                                <th>Black</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="history-body"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+
+            <!-- Learn View -->
+            <div id="view-learn" class="content-view">
+                <div class="learn-container">
+                    <section class="learn-section" style="margin-bottom: 4rem; text-align: center;">
+                        <div class="glass-panel" style="display: inline-block; width: 100%; padding: 2.5rem; background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.05)); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 24px;">
+                            <h2 style="color: #3b82f6; margin-bottom: 1rem; font-family: 'Noto Serif TC', serif; font-weight: 900;">Deep Dive into Xiangqi</h2>
+                            <p style="color: #ccc; margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.6;">Explore the rich history, professional opening theories, and advanced tactical analysis of Chinese Chess on the official encyclopedia.</p>
+                            <a href="https://en.wikipedia.org/wiki/Xiangqi" target="_blank" class="btn primary-btn" style="display: inline-block; padding: 1rem 2.5rem; text-decoration: none; font-size: 1rem; letter-spacing: 1px;">VISIT WIKIPEDIA</a>
+                        </div>
+                    </section>
+
+                    <section class="learn-section">
+                        <h2>Objective</h2>
+                        <div class="objective-card">
+                            <p>The goal of Chinese Chess is to <strong>Checkmate</strong> (capture) the enemy General.
+                                You win if the enemy General is under attack and has no legal moves to escape.
+                                Additionally, causing a <strong>Stalemate</strong> (where the opponent has no legal
+                                moves even if not in check) counts as a win for the player who made the last move.</p>
+                        </div>
+                    </section>
+
+                    <section class="learn-section" style="margin-top: 3rem;">
+                        <h2>Board Geography</h2>
+                        <div class="terminology-grid">
+                            <div class="term-card">
+                                <h3>The River (楚河 漢界)</h3>
+                                <div class="term-img-placeholder" style="background-image: url('static/images/board_overview.png')">
+                                </div>
+                                <p>The central division representing the historical border between the Chu and Han
+                                    states. It acts as a <strong>physical barrier</strong>: Elephants (相/象) are
+                                    forbidden from crossing it. Additionally, Soldiers (兵/卒) undergo a "promotion" upon
+                                    crossing, gaining the ability to move sideways for the remainder of the game.</p>
+                            </div>
+                            <div class="term-card">
+                                <h3>The Palace (九宮)</h3>
+                                <div class="term-img-placeholder"
+                                    style="background-image: url('static/images/board_overview.png'); background-position: bottom;">
+                                </div>
+                                <p>A 3x3 grid marked with diagonal lines where the General (帥/將) and Advisors (仕/士)
+                                    reside. These pieces are <strong>royalty</strong> and are strictly confined to this
+                                    area; they cannot step outside its boundaries under any circumstances. The diagonal
+                                    lines also define the movement paths for the Advisors.</p>
+                            </div>
+                            <div class="term-card">
+                                <h3>Horse's Leg (別馬腿)</h3>
+                                <div class="term-img-placeholder" style="background-image: url('static/images/horse_leg_final.png')">
+                                </div>
+                                <p>A tactical blocking rule. The Horse moves one step orthogonally and then one step
+                                    diagonally. If a piece (friend or foe) occupies the point directly adjacent to the
+                                    Horse in its <strong>initial straight step</strong>, the Horse's path is "blocked"
+                                    and it cannot complete the move in that direction.</p>
+                            </div>
+                            <div class="term-card">
+                                <h3>Elephant's Eye (塞象眼)</h3>
+                                <div class="term-img-placeholder"
+                                    style="background-image: url('static/images/elephant_eye_final.png')"></div>
+                                <p>Similar to the Horse's Leg, the Elephant moves in a 2x2 diagonal leap. If any piece
+                                    occupies the <strong>exact center</strong> of that 2x2 square (the "eye"), the
+                                    Elephant is blocked from jumping to its destination point. This is a common
+                                    defensive tactic to trap an opponent's Elephant.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="learn-section" style="margin-top: 3rem;">
+                        <h2>Piece Movements</h2>
+                        <div class="terminology-grid">
+                            <div class="term-card">
+                                <h3>General <span class="char-span">帥 / 將</span></h3>
+                                <div class="piece-preview-container">
+                                    <div class="piece-preview red">帥</div>
+                                    <div class="piece-preview black">將</div>
+                                </div>
+                                <p>Stays within the 3x3 Palace. Cannot face the enemy General directly.</p>
+                            </div>
+                            <div class="term-card">
+                                <h3>Advisor <span class="char-span">仕 / 士</span></h3>
+                                <div class="piece-preview-container">
+                                    <div class="piece-preview red">仕</div>
+                                    <div class="piece-preview black">士</div>
+                                </div>
+                                <p>Stays within the Palace. Moves one point diagonally.</p>
+                            </div>
+                            <div class="term-card">
+                                <h3>Elephant <span class="char-span">相 / 象</span></h3>
+                                <div class="piece-preview-container">
+                                    <div class="piece-preview red">相</div>
+                                    <div class="piece-preview black">象</div>
+                                </div>
+                                <p>Moves 2 points diagonally. Cannot cross the River. Blocked by "Elephant's Eye."</p>
+                            </div>
+                            <div class="term-card">
+                                <h3>Horse <span class="char-span">傌 / 馬</span></h3>
+                                <div class="piece-preview-container">
+                                    <div class="piece-preview red">傌</div>
+                                    <div class="piece-preview black">馬</div>
+                                </div>
+                                <p>Moves 1 point orthogonally then 1 point diagonally (L-shape). Blocked by "Horse's
+                                    Leg."</p>
+                            </div>
+                            <div class="term-card">
+                                <h3>Chariot <span class="char-span">俥 / 車</span></h3>
+                                <div class="piece-preview-container">
+                                    <div class="piece-preview red">俥</div>
+                                    <div class="piece-preview black">車</div>
+                                </div>
+                                <p>Moves any distance vertically or horizontally.</p>
+                            </div>
+                            <div class="term-card">
+                                <h3>Cannon <span class="char-span">炮 / 砲</span></h3>
+                                <div class="piece-preview-container">
+                                    <div class="piece-preview red">炮</div>
+                                    <div class="piece-preview black">砲</div>
+                                </div>
+                                <p>Moves like a Chariot, but must jump over exactly one piece (the "Screen") to capture.
+                                </p>
+                            </div>
+                            <div class="term-card">
+                                <h3>Soldier <span class="char-span">兵 / 卒</span></h3>
+                                <div class="piece-preview-container">
+                                    <div class="piece-preview red">兵</div>
+                                    <div class="piece-preview black">卒</div>
+                                </div>
+                                <p>Moves 1 point forward. After crossing the River, can also move sideways.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script type="module" src="static/js/main.js"></script>
+</body>
+
+</html>

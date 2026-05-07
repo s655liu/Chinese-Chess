@@ -1,0 +1,110 @@
+.main-header {
+    background: rgba(22, 21, 18, 0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+}
+
+.logo {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: -0.02em;
+    background: linear-gradient(to right, #fff, #999);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.nav-tabs {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.nav-link {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    padding: 0.6rem 1.2rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.nav-link:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-link.active {
+    color: var(--blue-accent);
+    background: rgba(59, 130, 246, 0.1);
+}
+
+.content-view {
+    display: none;
+    flex: 1;
+}
+
+.content-view.active {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Dashboard Hero */
+.dashboard-hero {
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+    width: 100%;
+}
+
+.hero-text {
+    flex: 1;
+    max-width: 600px;
+}
+
+.hero-text h1 {
+    font-size: 4.5rem;
+    font-weight: 900;
+    line-height: 1.05;
+    margin-bottom: 1.5rem;
+    color: #fff;
+    font-family: 'Noto Serif TC', serif;
+}
+
+.hero-text p {
+    font-size: 1.2rem;
+    color: #aaa;
+    margin-bottom: 2.5rem;
+    line-height: 1.6;
+}
+
+.hero-image {
+    flex: 1;
+    max-width: 700px;
+    height: 600px;
+    background-image: url('../images/hero_board.png');
+    background-size: cover;
+    background-position: center;
+    border-radius: 24px;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.8);
+    border: 1px solid rgba(255,255,255,0.05);
+}

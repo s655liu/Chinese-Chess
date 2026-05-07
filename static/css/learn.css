@@ -1,0 +1,131 @@
+.learn-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 6rem 2rem;
+    width: 100%;
+}
+
+.learn-section {
+    margin-bottom: 6rem;
+}
+
+.learn-section h2 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 2.5rem;
+    color: #fff;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+    padding-bottom: 0.5rem;
+    display: inline-block;
+}
+
+.objective-card {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 2.5rem;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    line-height: 1.8;
+    font-size: 1.1rem;
+    color: #ddd;
+}
+
+.objective-card strong {
+    color: var(--blue-accent);
+}
+
+.terminology-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.term-card {
+    background: rgba(255, 255, 255, 0.02);
+    padding: 2rem;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+}
+
+.term-card:hover {
+    background: rgba(255, 255, 255, 0.04);
+    transform: translateY(-8px);
+    border-color: rgba(59, 130, 246, 0.3);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.term-card h3 {
+    font-size: 1.4rem;
+    color: var(--blue-accent);
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.char-span {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 0.9rem;
+    color: #666;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+}
+
+.term-img-placeholder {
+    width: 100%;
+    height: 180px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    filter: saturate(0.8) contrast(1.1);
+}
+
+.term-card p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.7;
+}
+
+/* Piece Previews */
+.piece-preview-container {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    justify-content: center;
+}
+
+.piece-preview {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 1.8rem;
+    font-weight: 900;
+    background: radial-gradient(circle at 30% 30%, #4a3728 0%, #2c1e14 100%);
+    border: 2px solid #5d4037;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.piece-preview.red {
+    color: #ff4d4d;
+    border-color: #8b0000;
+}
+
+.piece-preview.black {
+    color: #e5e7eb;
+    border-color: #111;
+}
+
+@media (max-width: 768px) {
+    .terminology-grid {
+        grid-template-columns: 1fr;
+    }
+}

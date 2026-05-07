@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | Xiangqi Pro</title>
+    <link rel="stylesheet" href="static/css/base.css">
+    <link rel="stylesheet" href="static/css/overlays.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Serif+TC:wght@600;900&display=swap" rel="stylesheet">
+    <style>
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #161512;
+            padding: 2rem;
+        }
+        .setup-card {
+            max-width: 480px;
+            width: 100%;
+        }
+        input.auth-input {
+            width: 100%;
+            padding: 1.1rem;
+            margin-bottom: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+        input.auth-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.15);
+        }
+        .password-checklist {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.6rem;
+            margin: 0.5rem 0 2rem;
+            padding: 1rem;
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+        }
+        .checklist-item {
+            font-size: 0.8rem;
+            color: #555;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+        .checklist-item.valid {
+            color: #10b981;
+        }
+        .checklist-item i {
+            font-style: normal;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="setup-card glass-panel" style="padding: 3rem;">
+            <h1 style="font-family: 'Noto Serif TC', serif; color: #3b82f6; margin-bottom: 2rem; font-weight: 900; text-align: center;">Xiangqi Pro</h1>
+            <h2 style="color: #fff; margin-bottom: 1.5rem; font-size: 1.3rem; text-align: center;">Create Account</h2>
+            <form id="register-form">
+                <input type="text" name="username" placeholder="Username" class="auth-input" required>
+                <input type="email" name="email" placeholder="Email Address" class="auth-input" required>
+                <input type="password" id="password" name="password" placeholder="Password" class="auth-input" required>
+                <input type="password" id="confirm-password" placeholder="Confirm Password" class="auth-input" required>
+                
+                <div class="password-checklist">
+                    <div class="checklist-item" data-rule="length"><i>○</i> 8+ Characters</div>
+                    <div class="checklist-item" data-rule="upper"><i>○</i> Uppercase</div>
+                    <div class="checklist-item" data-rule="lower"><i>○</i> Lowercase</div>
+                    <div class="checklist-item" data-rule="number"><i>○</i> Number</div>
+                    <div class="checklist-item" data-rule="symbol"><i>○</i> Special Symbol</div>
+                    <div class="checklist-item" data-rule="match"><i>○</i> Passwords Match</div>
+                </div>
+
+                <button type="submit" id="btn-submit" class="btn primary-btn" style="width: 100%; padding: 1.1rem; font-size: 1rem;" disabled>Register</button>
+            </form>
+            <p style="margin-top: 2rem; color: #888; font-size: 0.9rem; text-align: center;">
+                Already have an account? <a href="/?showAuth=1" style="color: #3b82f6; text-decoration: none; font-weight: 600;">Login</a>
+            </p>
+        </div>
+    </div>
+    <script>
+        const passInput = document.getElementById('password');
+        const confirmInput = document.getElementById('confirm-password');
+        const submitBtn = document.getElementById('btn-submit');
+        const items = document.querySelectorAll('.checklist-item');
+
+        const rules = {
+            length: val => val.length >= 8,
+            upper: val => /[A-Z]/.test(val),
+            lower: val => /[a-z]/.test(val),
+            number: val => /[0-9]/.test(val),
+            symbol: val => /[!@#$%^&*()\-=_+\[\]{}|;:,.<>?]/.test(val),
+            match: () => confirmInput.value === passInput.value && passInput.value !== ''
+        };
+
+        function validate() {
+            let allValid = true;
+            Object.keys(rules).forEach(rule => {
+                const isValid = rules[rule](passInput.value);
+                const item = document.querySelector(`[data-rule="${rule}"]`);
+                if (isValid) {
+                    item.classList.add('valid');
+                    item.querySelector('i').textContent = '●';
+                } else {
+                    item.classList.remove('valid');
+                    item.querySelector('i').textContent = '○';
+                    allValid = false;
+                }
+            });
+            submitBtn.disabled = !allValid;
+        }
+
+        passInput.addEventListener('input', validate);
+        confirmInput.addEventListener('input', validate);
+
+        document.getElementById('register-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const res = await fetch('/register', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await res.json();
+            if (data.success) {
+                window.location.href = '/?showAuth=1';
+            } else {
+                alert(data.error);
+            }
+        });
+    </script>
+</body>
+</html>
