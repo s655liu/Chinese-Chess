@@ -3,7 +3,7 @@ flask-sqlalchemy
 flask-socketio
 flask-bcrypt
 flask-login
-eventlet
+gevent
 gunicorn
 python-socketio
 python-engineio
