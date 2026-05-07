@@ -6,4 +6,4 @@ flask-login
 eventlet
 gunicorn
 python-socketio
-engineio
+python-engineio
